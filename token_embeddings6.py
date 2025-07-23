@@ -55,29 +55,29 @@ for layer_idx in range(1, 6):
 
         import torch.nn.functional as F
 
-# Get number of tokens in the first sentence
-num_tokens = input_ids[0].size(0)  # This gives you the number of tokens (e.g., 45)
+#Number of tokens in the first sentence
+num_tokens = input_ids[0].size(0)  #Which gives the number of tokens
 
-# Container to hold pairwise distance matrices
+#Container - hold pairwise distance matrices
 num_layers = 5
 pairwise_distances = torch.zeros((num_layers, num_tokens, num_tokens))
 
-# Compute cosine distances for each layer
-for layer_idx in range(1, 6):  # Layers 1 to 5
+#Compute cosine distances for each layer
+for layer_idx in range(1, 6):  #Layers 1 - 5
     current_hidden = all_hidden_states[layer_idx][0]  # shape: (tokens, hidden_dim)
     
-    # Normalize each token vector
+    #Normalizing each token vector
     normed = F.normalize(current_hidden, p=2, dim=1)
     
-    # Compute cosine similarity matrix (tokens x tokens)
+    #Computing cosine similarity matrix (tokens x tokens)
     cosine_sim = torch.matmul(normed, normed.T)
     
-    # Convert to cosine distance
-    cosine_dist = 1 - cosine_sim  # cosine distance = 1 - cosine similarity
+    #Converting to cosine distance
+    cosine_dist = 1 - cosine_sim  #Cosine distance =is 1 - cosine similarity
     
     pairwise_distances[layer_idx - 1] = cosine_dist
 
-# Print 5x5 submatrix from each layer
+# Printing 5x5 submatrix from each layer
 print("\n=== First 5x5 Cosine Distance Submatrices ===")
 for i in range(num_layers):
     print(f"\n--- Layer {i+1} ---")
